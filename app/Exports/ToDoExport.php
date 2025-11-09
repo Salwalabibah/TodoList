@@ -14,7 +14,7 @@ use PhpOffice\PhpSpreadsheet\Style\Border;
 class ToDoExport implements FromCollection, WithHeadings, WithMapping, WithEvents
 {
     protected $filters;
-    public $total_todo, $total_time_tracked;
+    public $data, $total_todo, $total_time_tracked;
 
     public function __construct($filters)
     {
@@ -65,7 +65,7 @@ class ToDoExport implements FromCollection, WithHeadings, WithMapping, WithEvent
         $this->total_todo = $query->count();
         $this->total_time_tracked = $query->sum('time_tracked');
 
-        return $query->get();
+        return $this->data = $query->get();
     }
 
     public function map($row): array
@@ -96,7 +96,7 @@ class ToDoExport implements FromCollection, WithHeadings, WithMapping, WithEvent
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $rows = count($this->collection());
+                $rows = count($this->data);
 
                 $start_row = $rows + 2;
 
