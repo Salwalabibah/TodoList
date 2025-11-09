@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('to-do-list', [ToDoController::class, 'index'])->name('to-do.index');
-Route::post('to-do-list/store', [ToDoController::class, 'store'])->name('to-do.store');
+Route::apiResource('to-do-list', ToDoController::class)->only(['index', 'store']);
 Route::get('to-do-list/export', [ToDoController::class, 'export'])->name('to-do.export');
+Route::get('to-do-list/chart', [ToDoController::class, 'chart'])->name('to-do.chart');
+ 
