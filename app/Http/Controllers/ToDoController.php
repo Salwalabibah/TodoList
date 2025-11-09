@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ToDoExport;
 use App\Models\ToDo;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ToDoController extends Controller
 {
@@ -49,9 +51,21 @@ class ToDoController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function excel_generate(Request $request)
+    public function export(Request $request)
     {
-        
+        $filters = [
+            'title' => $request->has('title') ? $request->title : '',
+            'assignee' => $request->has('assignee') ? explode(',', $request->assignee) : [],
+            'status' => $request->has('status') ? explode(',', $request->status) : [],
+            'priority' => $request->has('priority') ? explode(',', $request->priority) : [],
+            'start_date' => $request->has('start') ? $request->start : null,
+            'end_date' => $request->has('end') ? $request->end : null,
+            'min_time' => $request->has('min') ? $request->min : null,
+            'max_time' => $request->has('max') ? $request->max : null,
+        ];
+
+        return Excel::download(new ToDoExport($filters), 'todo.xlsx');
     }
 
 }
+
